@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+</head>
+<body>
+    <h1>Home</h1>
+    <div id="data"></div>
+    <button onclick="logout();" >Logout</button>
+
+    <script>
+        async function welcomeMessage() {
+            try {
+                const res = await getData("currentuser");
+                if (res.name) {
+                    const messageElement = document.getElementById('data');
+                    messageElement.innerHTML = `<p>Hello, ${res.name}. You are logged in.</p>`;
+                } else {
+                    location.href = "/login";
+                }
+            } catch (err) {
+                alert(err.msg);
+            }
+        }
+
+        async function getData(url, options) {
+            try {
+                const res = await fetch("http://localhost:5000/" + url, options);
+                return await res.json();
+            } catch (err) {
+                alert(err.msg);
+            }
+        }
+
+        async function logout() {
+            try {
+                await getData("logout");
+                location.href = "/login";
+            } catch (err) {
+                alert(err.msg);
+            }
+        }
+
+        welcomeMessage();
+    </script>
+</body>
+</html>
